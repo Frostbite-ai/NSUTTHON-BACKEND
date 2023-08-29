@@ -4,83 +4,74 @@
  */
 exports.up = function (knex) {
   return knex.schema
-    .createTable("users", (table) => {
-      table.increments("user_id").primary();
-      table.string("mobile_number", 15).unique().notNullable();
-      table.string("password", 255).notNullable();
-      table.string("name", 255);
-      table.string("email", 255);
-      table.string("roll_no", 50);
-      table.string("branch", 100);
-      table.boolean("is_verified").defaultTo(false);
-    })
-    .createTable("teams", (table) => {
-      table.increments("team_id").primary();
-      table.string("team_name", 255).notNullable();
-      table.integer("team_leader_id").references("user_id").inTable("users");
-    })
-    .createTable("team_members", (table) => {
-      table.increments("team_member_id").primary();
-      table.integer("team_id").references("team_id").inTable("teams");
-      table.integer("user_id").references("user_id").inTable("users");
-    })
-    .createTable("societies", (table) => {
-      table.increments("society_id").primary();
-      table.string("society_name", 255).notNullable();
-      table.string("contact_info", 255);
-    })
-    .createTable("event_tags", (table) => {
-      table.increments("tag_id").primary();
-      table.string("tag_name", 255).unique().notNullable();
-    })
     .createTable("events", (table) => {
       table.increments("event_id").primary();
       table.string("event_name", 255).notNullable();
       table.text("description");
       table.text("rules");
-      table.date("date");
+      table.integer("day_number").notNullable();
       table.time("time");
       table.string("venue", 255);
-      table.integer("society_id").references("society_id").inTable("societies");
+      table.string("society_name");
+      table.string("name_poc_1", 255);
+      table.string("phone_poc_1", 15);
+      table.string("name_poc_2", 255);
+      table.string("phone_poc_2", 15);
+      table.string("name_poc_3", 255);
+      table.string("phone_poc_3", 15);
+      table
+        .string("banner_url_1", 512)
+        .defaultTo(
+          "https://nsutthon.s3.ap-south-1.amazonaws.com/PLACEHOLDER.jpg"
+        );
+      table
+        .string("banner_url_2", 512)
+        .defaultTo(
+          "https://nsutthon.s3.ap-south-1.amazonaws.com/PLACEHOLDER2.jpeg"
+        );
+      table.string("registration_link", 512);
+      table.string("event_type", 255);
     })
-    .createTable("event_event_tags", (table) => {
-      table.integer("event_id").references("event_id").inTable("events");
-      table.integer("tag_id").references("tag_id").inTable("event_tags");
-      table.primary(["event_id", "tag_id"]);
+    .then(() => {
+      return knex.schema.createTable("Team", (table) => {
+        table.increments("team_id").primary();
+        table.string("team_name", 255).notNullable().index();
+        table.integer("points").defaultTo(0);
+        table.integer("team_leader_id").nullable();
+      });
     })
-    .createTable("event_registrations", (table) => {
-      table.increments("registration_id").primary();
-      table.integer("event_id").references("event_id").inTable("events");
-      table.integer("team_id").references("team_id").inTable("teams");
+    .then(() => {
+      return knex.raw('ALTER SEQUENCE "Team_team_id_seq" RESTART WITH 1001');
     })
-    .createTable("leaderboard", (table) => {
-      table.increments("entry_id").primary();
-      table.integer("team_id").references("team_id").inTable("teams");
-      table.integer("total_points").defaultTo(0);
+    .then(() => {
+      return knex.schema.createTable("Team_members", (table) => {
+        table.increments("team_member_id").primary();
+        table.integer("team_id").references("team_id").inTable("Team");
+        table.string("member_name", 255).notNullable();
+        table.string("branch", 255);
+        table.string("phone_number", 15);
+        table.string("roll_no", 50);
+        // just added
+        table.string("email", 255).notNullable();
+      });
     })
-    .createTable("points_history", (table) => {
-      table.increments("history_id").primary();
-      table.integer("team_id").references("team_id").inTable("teams");
-      table.integer("event_id").references("event_id").inTable("events");
-      table.integer("points_awarded");
-      table.date("date_awarded").defaultTo(knex.fn.now());
+    .then(() => {
+      // New table: user
+      return knex.schema.createTable("user", (table) => {
+        table.increments("user_id").primary();
+        table.string("username", 255).notNullable().unique();
+        table.string("password", 255).notNullable();
+      });
     });
 };
-
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
   return knex.schema
-    .dropTable("points_history")
-    .dropTable("leaderboard")
-    .dropTable("event_registrations")
-    .dropTable("event_event_tags")
-    .dropTable("events")
-    .dropTable("event_tags")
-    .dropTable("societies")
-    .dropTable("team_members")
-    .dropTable("teams")
-    .dropTable("users");
+    .dropTableIfExists("user")
+    .dropTableIfExists("Team_members")
+    .dropTableIfExists("Team")
+    .dropTableIfExists("events");
 };

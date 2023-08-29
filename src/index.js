@@ -14,7 +14,11 @@ app.use(express.json());
 
 const authRoutes = require("./routes/auth"); // Assuming the `/login` and `/signup` are in `auth.js`
 const authenticateToken = require("./middlewares/authenticateToken");
-const passwordResetRoutes = require("./routes/passwordReset");
+// const passwordResetRoutes = require("./routes/passwordReset");
+const homepage = require("./routes/home");
+const events = require("./routes/events");
+const register = require("./routes/teamregister");
+const team = require("./routes/teams");
 
 // Use the connection string from Railway's dashboard
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -28,7 +32,11 @@ const pool = new Pool({
 });
 
 // Mount your routes
-app.use("/auth", authRoutes);
+app.use("/", authRoutes);
+app.use("/", events);
+app.use("/", register);
+app.use("/", team);
+// app.use("/", homepage);
 
 // Example of using the authenticateToken middleware for another route
 // app.use("/profile", authenticateToken, profileRoutes);
