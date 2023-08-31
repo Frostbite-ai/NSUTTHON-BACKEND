@@ -90,12 +90,17 @@ router.post("/register", (req, res) => {
         })
         .then(({ teamId, insertedMembers }) => {
           // Update the team_leader_id
-          return trx("Team").where("team_id", teamId).update({
-            team_leader_id: insertedMembers[0].team_member_id,
-          });
+          return trx("Team")
+            .where("team_id", teamId)
+            .update({
+              team_leader_id: insertedMembers[0],
+            })
+            .then(() => {
+              return { teamId, insertedMembers }; // return the teamId and insertedMembers for the next step
+            });
         });
     })
-    .then(() => {
+    .then(({ teamId }) => {
       // Invalidate the cache for allTeams because a new team has been registered
       teamsCache.del("allTeams");
 
@@ -127,7 +132,10 @@ router.post("/register", (req, res) => {
       });
 
       console.log("Sending response to client: Registration successful!");
-      res.status(201).json({ message: "Registration successful!" });
+      res.status(201).json({
+        message: "Registration successful!",
+        teamId: teamId, // Include the teamId in the response
+      });
     })
     .catch((error) => {
       console.log("Encountered an error while registering team:", error);
