@@ -93,7 +93,7 @@ router.post("/register", (req, res) => {
           return trx("Team")
             .where("team_id", teamId)
             .update({
-              team_leader_id: insertedMembers[0],
+              team_leader_id: insertedMembers[0].team_member_id,
             })
             .then(() => {
               return { teamId, insertedMembers }; // return the teamId and insertedMembers for the next step
