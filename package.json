@@ -9,7 +9,11 @@
     "jsonwebtoken": "^9.0.1",
     "knex": "^2.5.1",
     "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.4",
     "pg": "^8.11.2",
     "uuid": "^9.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js"
   }
 }
