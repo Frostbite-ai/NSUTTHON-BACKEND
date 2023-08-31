@@ -10,14 +10,14 @@ require("dotenv").config();
 
 router.get("/events", async (req, res) => {
   try {
-    // let allEvents = eventsCache.get("allEvents");
+    let allEvents = eventsCache.get("allEvents");
 
-    // if (!allEvents) {
-    console.log("Before database call");
-    allEvents = await knex("events").select("*");
-    console.log("After database call");
-    eventsCache.set("allEvents", allEvents, 3600); // Cache for 1 hour (3600 seconds)
-    // }
+    if (!allEvents) {
+      console.log("Before database call");
+      allEvents = await knex("events").select("*");
+      console.log("After database call");
+      eventsCache.set("allEvents", allEvents, 3600); // Cache for 1 hour (3600 seconds)
+    }
     res.json(allEvents);
   } catch (err) {
     console.error(err);
