@@ -14,7 +14,7 @@ console.log("Port:", SMTP_PORT);
 console.log("Email:", SMTP_EMAIL);
 console.log(
   "Password:",
-  SMTP_PASSWORD.startsWith("*") ? "********" : SMTP_PASSWORD
+  SMTP_PASSWORD && SMTP_PASSWORD.startsWith("*") ? "********" : SMTP_PASSWORD
 ); // Optional: Obfuscate if you wish
 
 // SMTP configuration
