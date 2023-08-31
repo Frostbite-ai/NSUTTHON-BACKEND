@@ -16,7 +16,7 @@ router.get("/events", async (req, res) => {
     console.log("Before database call");
     allEvents = await knex("events").select("*");
     console.log("After database call");
-    //   eventsCache.set("allEvents", allEvents, 3600); // Cache for 1 hour (3600 seconds)
+    eventsCache.set("allEvents", allEvents, 3600); // Cache for 1 hour (3600 seconds)
     // }
     res.json(allEvents);
   } catch (err) {
