@@ -117,10 +117,10 @@ router.post("/register", (req, res) => {
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <h1 style="color: #333; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Welcome to NSUTTHON, ${member.name}!</h1>
     <p style="color: #666; font-size: 16px; line-height: 1.5;">Congratulations! You are now eligible to participate in our events.</p>
-    <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">For a list of all the exciting events, <a href="URL to the events page" style="color: #007BFF; text-decoration: none;">click here</a>. If you have questions or need assistance, feel free to <a href="URL to the contact page" style="color: #007BFF; text-decoration: none;">contact us</a>.</p>
+    <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">For a list of all the exciting events, <a href="/events" style="color: #007BFF; text-decoration: none;">click here</a>. If you have questions or need assistance, feel free to <a href="/" style="color: #007BFF; text-decoration: none;">contact us</a>.</p>
     <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px; font-weight: bold;">Important: To verify your team registration, please complete the mandatory sponsor task:</p>
     <ul style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 10px;">
-      <li>Download <a href="URL to the app download" style="color: #007BFF; text-decoration: none;">this app</a>.</li>
+      <li>Download <a href="https://play.google.com/" style="color: #007BFF; text-decoration: none;">this app</a>.</li>
       <li>Register your account within the app.</li>
       <li>Follow any additional instructions provided in the app to ensure your team's successful verification.</li>
     </ul>
