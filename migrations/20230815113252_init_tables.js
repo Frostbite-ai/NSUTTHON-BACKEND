@@ -24,13 +24,9 @@ exports.up = function (knex) {
         .defaultTo(
           "https://nsutthon.s3.ap-south-1.amazonaws.com/PLACEHOLDER.jpg"
         );
-      table
-        .string("banner_url_2", 512)
-        .defaultTo(
-          "https://nsutthon.s3.ap-south-1.amazonaws.com/PLACEHOLDER2.jpeg"
-        );
+      table.string("banner_url_2", 512);
+      table.string("banner_url_3", 512);
       table.string("registration_link", 512);
-      table.string("event_type", 255);
     })
     .then(() => {
       return knex.schema.createTable("Team", (table) => {
