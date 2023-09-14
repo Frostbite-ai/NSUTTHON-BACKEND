@@ -35,9 +35,9 @@ router.post("/registerevent", authenticateToken, async (req, res) => {
     society_name,
     pocs,
     registration_link,
-    event_type,
     banner_url_1,
     banner_url_2,
+    banner_url_3,
   } = req.body;
 
   // Basic validation
