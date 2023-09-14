@@ -67,6 +67,7 @@ router.post("/registerevent", authenticateToken, async (req, res) => {
       registration_link,
       banner_url_1,
       banner_url_2,
+      banner_url_3,
     });
 
     // Invalidate the cache after a new event is added
