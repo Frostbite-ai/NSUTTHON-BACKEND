@@ -21,9 +21,7 @@ exports.up = function (knex) {
       table.string("phone_poc_3", 15);
       table
         .string("banner_url_1", 512)
-        .defaultTo(
-          "https://nsutthon.s3.ap-south-1.amazonaws.com/PLACEHOLDER.jpg"
-        );
+        .defaultTo("https://storage.googleapis.com/nsutthon/default_image.jpg");
       table.string("banner_url_2", 512);
       table.string("banner_url_3", 512);
       table.string("registration_link", 512);
