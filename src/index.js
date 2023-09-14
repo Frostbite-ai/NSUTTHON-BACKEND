@@ -19,6 +19,7 @@ const homepage = require("./routes/home");
 const events = require("./routes/events");
 const register = require("./routes/teamregister");
 const team = require("./routes/teams");
+const fileUploadRoutes = require("./routes/fileupload");
 
 // Use the connection string from Railway's dashboard
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -36,6 +37,7 @@ app.use("/", authRoutes);
 app.use("/", events);
 app.use("/", register);
 app.use("/", team);
+app.use("/", fileUploadRoutes);
 // app.use("/", homepage);
 
 // Example of using the authenticateToken middleware for another route
