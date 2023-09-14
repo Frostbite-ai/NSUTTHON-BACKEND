@@ -65,7 +65,6 @@ router.post("/registerevent", authenticateToken, async (req, res) => {
       name_poc_3: pocs[2] ? pocs[2].name : null,
       phone_poc_3: pocs[2] ? pocs[2].phone : null,
       registration_link,
-      event_type,
       banner_url_1,
       banner_url_2,
     });
