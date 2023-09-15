@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const knex = require("../utils/db.js");
 const authenticateToken = require("../middlewares/authenticateToken.js");
-// const NodeCache = require("node-cache");
-// const eventsCache = new NodeCache();
 const { eventsCache } = require("../utils/cache.js");
 
 require("dotenv").config();
@@ -22,6 +20,35 @@ router.get("/events", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error while fetching events.");
+  }
+});
+
+router.get("/events/:id", async (req, res) => {
+  const eventId = req.params.id;
+
+  try {
+    // First, try to get the event from cache.
+    let event = eventsCache.get(`event-${eventId}`);
+
+    if (!event) {
+      console.log("Fetching event from database");
+      event = await knex("events")
+        .select("*")
+        .where({ event_id: eventId })
+        .first();
+
+      if (!event) {
+        return res.status(404).send("Event not found.");
+      }
+
+      // Cache the specific event for 1 hour.
+      eventsCache.set(`event-${eventId}`, event, 3600);
+    }
+
+    res.json(event);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error while fetching the event.");
   }
 });
 
