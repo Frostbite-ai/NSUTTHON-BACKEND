@@ -36,6 +36,7 @@ router.post("/registerevent", authenticateToken, async (req, res) => {
     pocs,
     registration_link,
     banner_url_1,
+    banner_url_1_compressed,
     banner_url_2,
     banner_url_3,
   } = req.body;
@@ -66,6 +67,7 @@ router.post("/registerevent", authenticateToken, async (req, res) => {
       phone_poc_3: pocs[2] ? pocs[2].phone : null,
       registration_link,
       banner_url_1,
+      banner_url_1_compressed,
       banner_url_2,
       banner_url_3,
     });

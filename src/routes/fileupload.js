@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const { Storage } = require("@google-cloud/storage");
 const shortUUID = require("short-uuid");
+const sharp = require("sharp");
 
 const GCP_SERVICE_ACCOUNT_KEY_PATH = process.env.GCP_SERVICE_ACCOUNT_KEY_PATH;
 const GCP_PROJECT_ID = process.env.GCP_PROJECT_ID;
@@ -36,21 +37,45 @@ router.post("/upload", multerMid.single("file"), async (req, res) => {
     const filenameParts = req.file.originalname.split(".");
     const newFilename = `${filenameParts[0]}-${uuid}.${
       filenameParts[1] || "png"
-    }`; // defaulting to png if no extension is found
+    }`;
+    const compressedFilename = `${filenameParts[0]}-${uuid}-compressed.${
+      filenameParts[1] || "png"
+    }`;
 
-    const blob = bucket.file(newFilename);
-    const blobStream = blob.createWriteStream();
+    // First, save the original image
+    const originalBlob = bucket.file(newFilename);
+    const originalBlobStream = originalBlob.createWriteStream();
 
-    blobStream.on("error", (err) => {
+    originalBlobStream.on("error", (err) => {
       res.status(500).send(err);
     });
 
-    blobStream.on("finish", () => {
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-      res.status(200).send(publicUrl);
+    originalBlobStream.on("finish", async () => {
+      // After the original image is saved, save the compressed one
+      const compressedImageBuffer = await sharp(req.file.buffer)
+        .resize(500) // or any other size you prefer
+        .jpeg({ quality: 70 }) // adjust quality as needed
+        .toBuffer();
+
+      const compressedBlob = bucket.file(compressedFilename);
+      const compressedBlobStream = compressedBlob.createWriteStream();
+
+      compressedBlobStream.on("error", (err) => {
+        res.status(500).send(err);
+      });
+
+      compressedBlobStream.on("finish", () => {
+        const publicUrl = {
+          original: `https://storage.googleapis.com/${bucket.name}/${originalBlob.name}`,
+          compressed: `https://storage.googleapis.com/${bucket.name}/${compressedBlob.name}`,
+        };
+        res.status(200).send(publicUrl);
+      });
+
+      compressedBlobStream.end(compressedImageBuffer);
     });
 
-    blobStream.end(req.file.buffer);
+    originalBlobStream.end(req.file.buffer);
   } catch (error) {
     res.status(500).send(error.message);
   }
