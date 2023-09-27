@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const knex = require("../utils/db.js");
 const ExcelJS = require("exceljs");
+const authenticateToken = require("../middlewares/authenticateToken.js");
 
 const { teamsCache } = require("../utils/cache.js");
 
@@ -25,16 +26,36 @@ router.get("/teams", async (req, res) => {
 });
 
 // 2. Update points based on the team ID.
-router.put("/teams/update-points", async (req, res) => {
+router.put("/teams/update-points", authenticateToken, async (req, res) => {
   const { team_id, points } = req.body;
+
+  // Validate request parameters
+  if (!team_id || points == null) {
+    return res
+      .status(400)
+      .json({ message: "Team ID and points are required." });
+  }
+
   try {
+    // Check if team exists
+    const teamExists = await knex("Team").where("team_id", team_id).first();
+    if (!teamExists) {
+      return res.status(404).json({ message: "Team not found." });
+    }
+
+    // Update points
     await knex("Team").where("team_id", team_id).update({ points });
+
     // Invalidate cache as data is changed
     teamsCache.del("allTeams");
-    res.status(200).send("Team points updated successfully.");
+
+    res.status(200).json({ message: "Team points updated successfully." });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error while updating points.");
+    res.status(500).json({
+      message: "Server error while updating points.",
+      error: err.message,
+    });
   }
 });
 

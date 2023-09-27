@@ -9,7 +9,6 @@ require("dotenv").config();
 router.get("/events", async (req, res) => {
   try {
     let allEvents = eventsCache.get("allEvents");
-
     if (!allEvents) {
       console.log("Before database call");
       allEvents = await knex("events").select("*");
@@ -109,34 +108,33 @@ router.post("/registerevent", authenticateToken, async (req, res) => {
   }
 });
 
-router.delete("/eventdelete/:id", async (req, res) => {
+router.delete("/eventdelete/:id", authenticateToken, async (req, res) => {
   const eventId = req.params.id;
 
-  // Check if eventId is provided
   if (!eventId) {
-    return res.status(400).send("Event ID is required.");
+    return res.status(400).json({ message: "Event ID is required." });
   }
 
   try {
-    // Check if the event exists
     const eventExists = await knex("events")
       .where({ event_id: eventId })
       .first();
 
     if (!eventExists) {
-      return res.status(404).send("Event not found.");
+      return res.status(404).json({ message: "Event not found." });
     }
 
-    // Delete the event
     await knex("events").where({ event_id: eventId }).delete();
 
-    // Invalidate the cache after an event is deleted
-    eventsCache.del("allEvents");
+    eventsCache.del("allEvents"); // Invalidate the cache after an event is deleted
 
-    res.status(200).send("Event deleted successfully!");
+    res.status(200).json({ message: "Event deleted successfully!" });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error while deleting event.");
+    res.status(500).json({
+      message: "Server error while deleting event.",
+      error: err.message,
+    });
   }
 });
 
