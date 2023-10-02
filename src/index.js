@@ -38,6 +38,7 @@ app.use("/", events);
 app.use("/", register);
 app.use("/", team);
 app.use("/", fileUploadRoutes);
+app.use("/", homepage);
 // app.use("/", homepage);
 
 // Example of using the authenticateToken middleware for another route
