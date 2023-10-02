@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-// Set up the PostgreSQL pool using the connection string from your .env file
+// Set up the PostgreSQL pool using the connection string from your .env file old
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
