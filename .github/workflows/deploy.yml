@@ -19,4 +19,4 @@ jobs:
           script: |
             cd NSUTTHON-BACKEND
             git pull
-            pm2 restart index
+            /home/vaibhav6meena/.nvm/versions/node/v18.17.1/bin/pm2 restart index
