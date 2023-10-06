@@ -135,30 +135,29 @@ router.post("/register", (req, res) => {
     `,
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
+            transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
             console.log(`Error sending mail to ${teamLeader.email}:`, error);
-          } else {
+        } else {
             console.log(
-              `Email successfully sent to ${teamLeader.email}. Response:`,
-              info.response
+                `Email successfully sent to ${teamLeader.email}. Response:`,
+                info.response
             );
-          }
-        });
-      });
-
-      console.log("Sending response to client: Registration successful!");
-      res.status(201).json({
-        message: "Registration successful!",
-        teamId: teamId, // Include the teamId in the response
-      });
-    })
-    .catch((error) => {
-      console.log("Encountered an error while registering team:", error);
-      teamsCache.del("allTeams");
-      console.error("Detailed Error:", error);
-      res.status(500).json({ error: "Error registering team", details: error });
+        }
     });
+
+    console.log("Sending response to client: Registration successful!");
+    res.status(201).json({
+        message: "Registration successful!",
+        teamId: teamId,
+    });
+})
+.catch((error) => {
+    console.log("Encountered an error while registering team:", error);
+    teamsCache.del("allTeams");
+    console.error("Detailed Error:", error);
+    res.status(500).json({ error: "Error registering team", details: error });
+});
 });
 
 module.exports = router;
