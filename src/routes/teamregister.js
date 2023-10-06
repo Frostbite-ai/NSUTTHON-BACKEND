@@ -110,25 +110,29 @@ router.post("/register", (req, res) => {
         const mailOptions = {
           from: `"Team Crosslinks" <${SMTP_EMAIL}>`,
           to: member.email,
-          subject: "Registration Successful ",
-          // text: `This is a test email to check SMTP configuration.`, // You can keep this as a fallback
+          subject: "Registration Successful",
           html: `
-<div style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h1 style="color: #333; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Welcome to NSUTTHON, ${member.name}!</h1>
-    <p style="color: #666; font-size: 16px; line-height: 1.5;">Congratulations! You are now eligible to participate in our events.</p>
-    <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">For a list of all the exciting events, <a href="https://nsutthon-frontend.vercel.app/events" style="color: #007BFF; text-decoration: none;">click here</a>. If you have questions or need assistance, feel free to <a href="https://www.instagram.com/crosslinks.nsut/" style="color: #007BFF; text-decoration: none;">contact us</a>.</p>
-    <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px; font-weight: bold;">Important: To verify your team registration, please complete the mandatory sponsor task:</p>
-    <ul style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 10px;">
-      <li>Download <a href="https://play.google.com/" style="color: #007BFF; text-decoration: none;">this app</a>.</li>
-      <li>Register your account within the app.</li>
-      <li>Follow any additional instructions provided in the app to ensure your team's successful verification.</li>
-    </ul>
-    <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">Completing this task not only verifies your team but also supports our events and ensures we can continue providing great experiences for all participants.</p>
-    <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">Thank you for being a part of our community!</p>
-  </div>
-</div>
-`,
+    <div style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h1 style="color: #333; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Dear Team Leader,</h1>
+        <p style="color: #666; font-size: 16px; line-height: 1.5;">Congratulations on successfully registering your team for NSUTTHON! Your team ID is ${teamID}.</p>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">Make sure you note down your team ID, as it will be used while registering for the events and to identify your team throughout.</p>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">In order to get your team verified, and complete the registration process, carefully go through the instructions given below:</p>
+        <ol style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 10px;">
+          <li>Every team member needs to register on the app link given below, and complete the free aptitude test. Marks of the test do not matter. <a href="https://proedge.app.link/picxele2" style="color: #007BFF; text-decoration: none;">App Link (supported on android only)</a></li>
+          <li>It is the sole responsibility of the team leader to get every member of their team registered.</li>
+          <li>Team leaders need to submit a screenshot of each member's test score on the <a href="https://forms.gle/jZ1ApAk9VRQqwmc99" style="color: #007BFF; text-decoration: none;">form link attached</a>.</li>
+          <li>Please note that it is compulsory for each member to register using a single e-mail ID from one device, multiple entries from the same device are prohibited.</li>
+          <li>The app is supported by android devices only, use any android device available at your ease.</li>
+          <li>Make sure you use your personal email ID and not the college ID.</li>
+        </ol>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">Failing to complete any of the given steps will lead to the disqualification of the team.</p>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">In case of any queries, feel free to reach out to us.</p>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">Regards,</p>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin-top: 20px;">Team Crosslinks</p>
+      </div>
+    </div>
+    `,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
