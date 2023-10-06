@@ -104,14 +104,14 @@ router.post("/register", (req, res) => {
       // Invalidate the cache for allTeams because a new team has been registered
       teamsCache.del("allTeams");
 
-      // Send email to all team members
-      members.forEach((member) => {
-        console.log(`Preparing to send email to ${member.email}...`);
-        const mailOptions = {
-          from: `"Team Crosslinks" <${SMTP_EMAIL}>`,
-          to: member.email,
-          subject: "Registration Successful",
-          html: `
+            // Send email only to the first team member
+      const teamLeader = members[0];
+      console.log(`Preparing to send email to ${teamLeader.email}...`);
+      const mailOptions = {
+        from: `"Team Crosslinks" <${SMTP_EMAIL}>`,
+        to: teamLeader.email,
+        subject: "Registration Successful",
+        html: `
     <div style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <h1 style="color: #333; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Dear Team Leader,</h1>
@@ -137,10 +137,10 @@ router.post("/register", (req, res) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
-            console.log(`Error sending mail to ${member.email}:`, error);
+            console.log(`Error sending mail to ${teamLeader.email}:`, error);
           } else {
             console.log(
-              `Email successfully sent to ${member.email}. Response:`,
+              `Email successfully sent to ${teamLeader.email}. Response:`,
               info.response
             );
           }
